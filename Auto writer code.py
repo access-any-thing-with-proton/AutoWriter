@@ -124,7 +124,7 @@ class FRAUD:
                     elif keyboard.is_pressed('~'):   
                         self.unblock_tabs()
                         keyboard.release(self.hot_key)
-                        keyboard.press_and_release('ctrl',do_press=False)
+                        # keyboard.press_and_release('ctrl',do_press=False)
                         self.is_busy = False
                         break
                     else:
@@ -153,12 +153,13 @@ class FRAUD:
         text = """
         This is the Basic Auto Writer Instrutions
 
-        *** While writer is writing don't move the cursor ***
-
         For adding new tabs click on ('add tab') button. Max tabs 9 only
 
         You can paste Normal Text or code into Tabs and writer able to write in 'Notepad' or some "Code Editor's"
 
+        Note: If you have Num loc keys preffer to use Num loc keys 
+              press the alt for 1sec then then do
+              
         By pressing on (alt + tab no) writer can able to Extract content in selcted tab no
 
         For Normal Text:
@@ -174,11 +175,15 @@ class FRAUD:
         For example:
         ** python **
             \"""
+
                 ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) **
+
             \"""
         ** Java/c **
             /*
+
                 ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) **
+
             */
 
         For different type of languages use suitable Multiline comments
@@ -205,6 +210,7 @@ class FRAUD:
         
         Please press  ** esc ** button in keyboard by this the Auto writer will remove from background
         and linked hotkey also will be removed.
+        and then press ** alt ** for working of keys
         After pressing on 'esc' even though you press (alt + tab no) nothing will happen.
 
         """
@@ -223,5 +229,4 @@ class FRAUD:
 
 if __name__ == "__main__":
     FRAUD()
-
 
