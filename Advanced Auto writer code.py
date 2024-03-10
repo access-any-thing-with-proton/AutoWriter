@@ -196,17 +196,18 @@ class FRAUD:
         You can paste Normal Text or code into Tabs and writer able to write in 'Notepad' or some "Code Editor's"
 
         Note: If you have Num loc keys preffer to use Num loc keys 
-              press the alt for 1sec then then do
-              
-        By pressing on (alt + tab no) writer can able to Extract content in selcted tab no
-        For tab 1 prees (alt + 1)
-        For tab 10 press(alt + 0)
+
+        Note: Press the two buttons almost at a time
+
+        By pressing on (alt + tab no) or (tab no + alt) hotKey writer can able to Extract content in selcted tab no
+        For tab 1 prees (alt + 1) or (1 + alt)
+        For tab 10 press(alt + 0) or (0 + alt)
 
         For Normal Text:
         
         You need to add \"""  \""" before and after in the Notepad/Editor and 
 
-        ***place the cursor in between two and wait for 1 sec then press the (alt + tab no )***
+        ***place the cursor in between two and wait for 1 sec then press the (alt + tab no ) or (tab no + alt)***
 
         For Coding:
 
@@ -216,13 +217,13 @@ class FRAUD:
         ** python **
             \"""
 
-                ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) **
+                ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) or (tab no + alt) **
 
             \"""
         ** Java/c **
             /*
 
-                ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) **
+                ** place the cursor in b/w wait for 1 sec and then press (alt + tab no) or (tab no + alt)**
 
             */
 
@@ -246,7 +247,7 @@ class FRAUD:
 
         Here is some solutions when ever you got Error apply suitable one for slove
 
-        If the Typer is not writing. Press (alt + tab no) for every 1 sec
+        If the Typer is not writing. Press (alt + tab no) or (tab no + alt) for every 1 sec
 
         Even though is not writing press the '~' button in keyboard and clear the content in the window 
         and then try again
@@ -256,14 +257,14 @@ class FRAUD:
 
         * For stopping writer press '~' button in keboard *
 
-        If you again press the (alt + tab no) in same window the writer will start write from the first
+        If you again press the (alt + tab no) or (tab no + alt) in same window the writer will start write from the first
 
         Except these Errors if are facing slowdown of System or keys not working
         
         Please press  ** esc ** button in keyboard by this the Auto writer will remove from background
         and linked hotkey also will be removed.
         and then press ** alt ** for working of keys
-        After pressing on 'esc' even though you press (alt + tab no) nothing will happen.
+        After pressing on 'esc' even though you press (alt + tab no) or (tab no + alt) nothing will happen.
 
         """
 
