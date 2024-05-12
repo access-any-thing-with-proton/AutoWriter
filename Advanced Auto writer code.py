@@ -282,3 +282,4 @@ class FRAUD:
 
 if __name__ == "__main__":
     FRAUD()
+
