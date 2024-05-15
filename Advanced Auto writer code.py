@@ -6,33 +6,59 @@ from pathlib import Path
 import winotify
 import time
 import pyautogui
+import webbrowser
 
 class FRAUD:
-
     def __init__(self) -> None:
         self.root = Tk(className=" ADVANCED AUTO WRITER.")
         self.is_busy = False
 
-        self.main_frame = LabelFrame(self.root,width=1000,height=1000)
+        # Configure the main style
+        self.style = ttk.Style()
+        self.style.theme_create("custom_style", parent="alt", settings={
+            "TNotebook": {
+                "configure": {
+                    "background": "#87ceeb",  # Notebook background color
+                    "tabmargins": [2, 5, 2, 0],  # Margins: left, top, right, bottom
+                }
+            },
+            "TNotebook.Tab": {
+                "configure": {
+                    "padding": [10, 5],  # Padding inside tabs: [left & right, top & bottom]
+                    "background": "#d9d9d9",  # Tab background color
+                    "foreground": "#000000",  # Tab text color
+                },
+                "map": {
+                    "background": [("selected", "#ececec")],  # Selected tab background color
+                    "expand": [("selected", [1, 1, 1, 0])],  # Selected tab margins
+                }
+            }
+        })
+
+        # Apply the custom theme
+        self.style.theme_use("custom_style")
+
+        self.main_frame = LabelFrame(self.root, width=1000, height=1000)
         self.main_frame.pack()
 
-        self.root_lable = Label(self.root,text="** Read Instruction's Before Start **",
-                                     width=1,height=1,
-                                     fg="red",font=("Times New Roman",40),bg="#87ceeb")
-        self.root_lable.pack(side='top',fill='both')
+        self.root_label = Label(self.root, text="** Read Instruction's Before Start **",
+                                width=1, height=1,
+                                fg="red", font=("Times New Roman", 40), bg="#87ceeb")
+        self.root_label.pack(side='top', fill='both')
 
-        self.hscroll = Scrollbar(self.main_frame,orient='horizontal')
-        self.hscroll.pack(side='bottom',fill='x')
+        self.hscroll = Scrollbar(self.main_frame, orient='horizontal')
+        self.hscroll.pack(side='bottom', fill='x')
 
-        self.vscroll = Scrollbar(self.main_frame,orient='vertical')
-        self.vscroll.pack(side='right',fill='y')
+        self.vscroll = Scrollbar(self.main_frame, orient='vertical')
+        self.vscroll.pack(side='right', fill='y')
 
-        self.noot_book = ttk.Notebook(self.main_frame,width=1000,height=700)
+        self.noot_book = ttk.Notebook(self.main_frame, width=1000, height=700)
         self.noot_book.pack()
 
         self.menu = Menu(self.root)
-        self.menu.add_cascade(label="Add Tab",command=self.create_new_tab)
-        self.menu.add_cascade(label="Download User Manual",command=self.instructions)
+        self.menu.add_cascade(label="Add Tab", command=self.create_new_tab)
+        self.menu.add_cascade(label="Download User Manual", command=self.instructions)
+        self.menu.add_cascade(label="Git Hub Url", command=self.url_open)
         self.root.configure(menu=self.menu)
 
         self.create_new_tab()
@@ -40,57 +66,58 @@ class FRAUD:
 
         self.root.configure(background='#87ceeb')
         self.root.mainloop()
-    
+
     def close_application(self):
         try:
             self.root.destroy()
         except:
             pass
 
-    def create_new_tab(self):
+    def url_open(self):
+        url = "https://github.com/access-any-thing-with-proton/AutoWriter"
+        webbrowser.open(url=url)
 
+    def create_new_tab(self):
         total_tabs = len(self.noot_book.tabs())
 
         if total_tabs < 10:
-
-            self.text_box = Text(self.main_frame,wrap='none',fg='#000000',bg='#83D4D1',font=("Times New Roman",15),
-                                 yscrollcommand=self.vscroll.set,xscrollcommand=self.hscroll.set,
+            self.text_box = Text(self.main_frame, wrap='none', fg='#000000', bg='#83D4D1', font=("Times New Roman", 15),
+                                 yscrollcommand=self.vscroll.set, xscrollcommand=self.hscroll.set,
                                  undo=True)
-            self.text_box.pack(side='left',fill='y')
+            self.text_box.pack(side='left', fill='y')
 
             self.vscroll.configure(command=self.text_box.yview)
             self.hscroll.configure(command=self.text_box.xview)
 
-            self.noot_book.add(self.text_box,text=f"Tab {total_tabs+1}")
-    
-    def block_tabs(self):
+            self.noot_book.add(self.text_box, text=f"Tab {total_tabs + 1}")
+            self.noot_book.configure(style="TNotebook")
 
-        list_of_childrens = self.main_frame.winfo_children()
-        filtered_childerns = list_of_childrens[3::]
-        
-        for text_box in filtered_childerns:
-            text_box.configure(state = DISABLED)
+    def block_tabs(self):
+        list_of_children = self.main_frame.winfo_children()
+        filtered_children = list_of_children[3:]
+
+        for text_box in filtered_children:
+            text_box.configure(state=DISABLED)
 
     def unblock_tabs(self):
+        list_of_children = self.main_frame.winfo_children()
+        filtered_children = list_of_children[3:]
 
-        list_of_childrens = self.main_frame.winfo_children()
-        filtered_childerns = list_of_childrens[3::]
+        for text_box in filtered_children:
+            text_box.configure(state=NORMAL)
 
-        for text_box in filtered_childerns:
-            text_box.configure(state = NORMAL)
-            
     def always(self):
-        keys_list = ["1", "2", "3", "4", "5", "6", "7", "8", "9","10"]  # max 10 tabs only
+        keys_list = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]  # max 10 tabs only
 
         for key_no in keys_list:
             key_no = key_no[-1]
             self.hot_key = f"{'alt'} + {key_no}"
             if keyboard.is_pressed(hotkey=self.hot_key) and not self.is_busy:
-                extracted_text =self.extract_text(int(key_no))
+                extracted_text = self.extract_text(int(key_no))
 
-                if key_no == '0':# means tab 10
+                if key_no == '0':  # means tab 10
                     self.get_text_from_clipboard(key_no)
-                    extracted_text =self.extract_text(int(key_no))
+                    extracted_text = self.extract_text(int(key_no))
                     self.block_tabs()
                     self.code_writer(extracted_text)
                     self.unblock_tabs()
@@ -106,53 +133,53 @@ class FRAUD:
         if keyboard.is_pressed('esc'):
             self.close_application()
 
-        self.x,self.y = pyautogui.position()
+        self.x, self.y = pyautogui.position()
         self.root.after(50, self.always)
-    def get_text_from_clipboard(self,key_no):
+
+    def get_text_from_clipboard(self, key_no):
         try:
-            list_of_childrens = self.main_frame.winfo_children()
-            filtered_childerns = list_of_childrens[3::]
+            list_of_children = self.main_frame.winfo_children()
+            filtered_children = list_of_children[3:]
 
             if key_no == '0':
-                selected_text_box:Text = filtered_childerns[9]
-                selected_text_box.delete(index1="1.0",index2="end-1c")
+                selected_text_box: Text = filtered_children[9]
+                selected_text_box.delete(index1="1.0", index2="end-1c")
             else:
-                selected_text_box: Text = filtered_childerns[int(key_no) - 1]
-            
+                selected_text_box: Text = filtered_children[int(key_no) - 1]
+
             clipboard_data = self.root.clipboard_get()
-            selected_text_box.insert(index="1.0",chars=clipboard_data)
+            selected_text_box.insert(index="1.0", chars=clipboard_data)
 
         except:
             print(f"No tab found for index {key_no}")
 
-    def extract_text(self,tab_no) -> Text:
+    def extract_text(self, tab_no) -> Text:
         try:
-            list_of_childrens = self.main_frame.winfo_children()
-            filtered_childerns = list_of_childrens[3::]
+            list_of_children = self.main_frame.winfo_children()
+            filtered_children = list_of_children[3:]
 
             if tab_no == '0':
-                selected_text_box: Text = filtered_childerns[9]
+                selected_text_box: Text = filtered_children[9]
             else:
-                selected_text_box: Text = filtered_childerns[tab_no - 1]
+                selected_text_box: Text = filtered_children[tab_no - 1]
 
             text: str = selected_text_box.get("1.0", "end-1c")
 
             return text
-        
+
         except IndexError:
             self.is_busy = False
             return ""
 
-
-    def cursor_exact_postion(self):
-        pyautogui.click(self.x,self.y,clicks=1)
+    def cursor_exact_position(self):
+        pyautogui.click(self.x, self.y, clicks=1)
         keyboard.press_and_release('ctrl')
 
-        pyautogui.click(self.x,self.y,clicks=1)
+        pyautogui.click(self.x, self.y, clicks=1)
         keyboard.press_and_release('ctrl')
 
-    def code_writer(self,extracted_text:str):
-        self.cursor_exact_postion()
+    def code_writer(self, extracted_text: str):
+        self.cursor_exact_position()
         self.is_busy = True
 
         words = extracted_text.split("\n")
@@ -164,11 +191,18 @@ class FRAUD:
                 if keyboard.is_pressed('esc') or not self.is_busy:
                     self.is_busy = False
                     break
-                elif keyboard.is_pressed('~'):   
+                elif keyboard.is_pressed('~'):
                     self.unblock_tabs()
                     keyboard.release(self.hot_key)
                     self.is_busy = False
                     break
+                elif letter in ["{","[","("]:
+                    if str(pyautogui.getActiveWindowTitle().split()[-1]).strip().lower() in ["notepad","word"]:
+                        keyboard.write(letter,delay=0.2)
+                    else:
+                        keyboard.write(letter,delay=0.2)
+                        keyboard.press_and_release("right")
+                        keyboard.press_and_release('backspace')
                 else:
                     keyboard.write(letter, delay=0.1)
 
@@ -268,18 +302,18 @@ class FRAUD:
 
         """
 
-        with open (full_path,'w') as f:
+        with open(full_path, 'w') as f:
             f.write(text)
 
-        notification = winotify.Notification(app_id=' ADVANCED AUTO WRITER.',title="Thanks For Downloading",
-                              msg="User Manual Downloaded Sucessfully.")
-        
-        notification.add_actions(label="Open",launch=full_path)
-        notification.add_actions(label="OK",launch="")
-        notification.set_audio(sound=winotify.audio.Mail,loop=False)
+        notification = winotify.Notification(app_id=' ADVANCED AUTO WRITER.', title="Thanks For Downloading",
+                                             msg="User Manual Downloaded Successfully.")
+
+        notification.add_actions(label="Open", launch=full_path)
+        notification.add_actions(label="OK", launch="")
+        notification.set_audio(sound=winotify.audio.Mail, loop=False)
 
         notification.show()
 
+
 if __name__ == "__main__":
     FRAUD()
-
