@@ -8,6 +8,7 @@ import time
 import pyautogui
 import webbrowser
 
+
 class FRAUD:
     def __init__(self) -> None:
         self.root = Tk(className=" ADVANCED AUTO WRITER.")
