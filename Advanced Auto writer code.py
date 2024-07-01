@@ -8,11 +8,11 @@ import time
 import pyautogui
 import webbrowser
 
-# sample
 class FRAUD:
     def __init__(self) -> None:
         self.root = Tk(className=" ADVANCED AUTO WRITER.")
         self.is_busy = False
+        self.root.state(newstate="zoomed")
 
         # Configure the main style
         self.style = ttk.Style()
@@ -60,6 +60,14 @@ class FRAUD:
         self.menu.add_cascade(label="Add Tab", command=self.create_new_tab)
         self.menu.add_cascade(label="Download User Manual", command=self.instructions)
         self.menu.add_cascade(label="Git Hub Url", command=self.url_open)
+        
+        self.int_var = IntVar()
+        self.brackets_menu = Menu(self.menu,tearoff=0,bg="SystemButtonface")
+        self.brackets_menu.add_radiobutton(label='OFF',value=0,variable=self.int_var)
+        self.brackets_menu.add_radiobutton(label='ON',value=1,variable=self.int_var)
+        self.int_var.set(value=1)
+
+        self.menu.add_cascade(label="check for brackets",menu=self.brackets_menu)
         self.root.configure(menu=self.menu)
 
         self.create_new_tab()
@@ -198,7 +206,7 @@ class FRAUD:
                     self.is_busy = False
                     break
                 elif letter in ["{","[","("]:
-                    if str(pyautogui.getActiveWindowTitle().split()[-1]).strip().lower() in ["notepad","word"]:
+                    if self.int_var.get() == 0:
                         keyboard.write(letter,delay=0.2)
                     else:
                         keyboard.write(letter,delay=0.2)
@@ -233,6 +241,9 @@ class FRAUD:
         Note: If you have Num loc keys preffer to use Num loc keys 
 
         Note: Press the two buttons almost at a time
+
+        Note: If you are using normal text editors like notepad please turn off the check for brackets option before use
+              Else you are using programing editors keep it on only
 
         By pressing on (alt + tab no) or (tab no + alt) hotKey writer can able to Extract content in selcted tab no
         For tab 1 prees (alt + 1) or (1 + alt)
@@ -300,7 +311,7 @@ class FRAUD:
         and linked hotkey also will be removed.
         and then press ** alt ** for working of keys
         After pressing on 'esc' even though you press (alt + tab no) or (tab no + alt) nothing will happen.
-
+        Finally  restar the computer for working Normally
         """
 
         with open(full_path, 'w') as f:
