@@ -17,6 +17,11 @@
             font-family: 'Times New Roman', Times, serif;
         }
 
+        hr {
+            border: 1px solid black;
+            margin: 4px 0;
+        }
+
         h1 {
             font-size: 3rem;
             background-color: rgba(0, 0, 0, 0.8);
@@ -59,6 +64,9 @@
         #output {
             text-align: center;
             font-size: 1rem;
+            width: 77%;
+            margin-left: auto;
+            margin-bottom: 3px;
         }
 
         form {
@@ -67,8 +75,8 @@
 
         .main-items {
             display: grid;
-            grid-template-columns: 20% 75%;
-            column-gap: 5%;
+            grid-template-columns: 20% 77%;
+            column-gap: 3%;
             height: 70vh;
         }
 
@@ -115,11 +123,12 @@
             border-radius: 15px;
         }
 
-        /* @property --angle {
+
+        @property --angle {
             syntax: "<angle>";
             initial-value: 0deg;
             inherits: false;
-        } */
+        }
 
         button::before {
             content: "";
@@ -195,9 +204,11 @@
             display: flex;
             flex-direction: column;
             border: 1px solid black;
+            overflow-y: scroll;
         }
 
         .links {
+            margin-top: 3px;
             display: flex;
             justify-content: space-evenly;
         }
@@ -232,6 +243,13 @@
                     width: 100%;
                 }
             }
+        }
+
+        @media screen and (max-width:850px) {
+
+            #output {
+                width: 100%;
+            }
 
             .main-items {
                 grid-template-columns: 100%;
@@ -257,17 +275,15 @@
 
 <body>
     <h1><span id="heading">Auto Writer...</span></h1>
-    <br>
+    <div class="note">You'r server and HTML file should connect to same Network. <br>Make sure that port 8000 not in use
+    </div>
     <hr>
-    <div class="note">You'r server and HTML file should connect to same Network.</div>
-    <br>
     <p id="output"></p>
     <form action="" method="post">
         <div class="main-items">
             <div class="buttons">
                 <label for="ip-address">Enter IPv4 address</label>
-                <input type="text" placeholder="Enter System IPv4 Address" id="ip-address" value="192.168.1.33"
-                    required>
+                <input type="text" placeholder="Enter Sys IPv4 Address" id="ip-address">
 
                 <div></div>
                 <button id="send-data">send data</button>
@@ -288,7 +304,6 @@
             </div>
         </div>
         <hr>
-        <br>
         <div class="other-fields">
             <div class="clipboard-div">
                 <button id="clipboard" type="button">Get latest copied Text</button>
@@ -307,9 +322,10 @@
         </div>
 
     </form>
-
+    <hr>
     <footer>
-        <a href="https://github.com/access-any-thing-with-proton/AutoWriter" target="_blank">GitHub Url</a>
+        <a href="https://github.com/access-any-thing-with-proton/AutoWriter/tree/main/web-based" target="_blank">GitHub
+            Url</a>
     </footer>
 
     <script>
@@ -359,7 +375,7 @@
         function send(event) {
             event.preventDefault();
             const msg = document.getElementById("message").value;
-            let laptopIPAddress = document.getElementById("ip-address").value;
+            let laptopIPAddress = document.getElementById("ip-address").value.trim();
             let url = `http://${laptopIPAddress}:8000/`;
             try {
                 fetch(url, {
@@ -368,7 +384,7 @@
                         "Content-Type": "application/json",
                         "X-CSRFToken": getCookie("csrftoken")
                     },
-                    body: JSON.stringify({ message: msg, ipAddress: document.getElementById("ip-address").value })
+                    body: JSON.stringify({ message: msg, ipAddress: laptopIPAddress })
                 })
                     .then(res => res.json())
                     .then(data => {
@@ -385,7 +401,7 @@
                         }
                     }).catch(err => {
                         console.error("Fetch failed:", err);
-                        outputEle.innerText = err.message + "/Invalid IP Address";
+                        outputEle.innerText = err.message + "\n/Invalid IP Address\n/server not started";
                         outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
                     });
             }
@@ -395,7 +411,7 @@
         }
 
         function additionalOptions() {
-            let laptopIPAddress = document.getElementById("ip-address").value;
+            let laptopIPAddress = document.getElementById("ip-address").value.trim();
             let url = `http://${laptopIPAddress}:8000/options`;
             fetch(url, {
                 method: "POST",
@@ -403,7 +419,7 @@
                     "Content-Type": "application/json",
                     "X-CSRFToken": getCookie("csrftoken")
                 },
-                body: JSON.stringify({ stop: isStop, delay: timeDelay, ipAddress: document.getElementById("ip-address").value })
+                body: JSON.stringify({ stop: isStop, delay: timeDelay, ipAddress: laptopIPAddress })
             })
                 .then(res => res.json())
                 .then(data => {
@@ -420,13 +436,13 @@
                     }
                 }).catch(err => {
                     console.error("Fetch failed:", err);
-                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.innerText = err.message + "\n/Invalid IP Address\n/server not started";
                     outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
                 });
         }
 
         function getClipBoard() {
-            let laptopIPAddress = document.getElementById("ip-address").value;
+            let laptopIPAddress = document.getElementById("ip-address").value.trim();
             let url = `http://${laptopIPAddress}:8000/get-clip-board`;
 
             fetch(url, {
@@ -440,21 +456,24 @@
                 .then(res => res.json())
                 .then(data => {
                     let text = data["copied_text"];
-                    document.getElementById("clipboard-data").innerText = text;
                     if (text.includes("Error")) {
                         outputEle.innerText = text;
                         outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
                     }
+                    else {
+                        outputEle.innerText = "";
+                        document.getElementById("clipboard-data").innerText = text;
+                    }
                 }).catch(err => {
                     console.error("Fetch failed:", err);
-                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.innerText = err.message + "\n/Invalid IP Address\n/server not started";
                     outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
                 });
 
         }
 
         function takeImage() {
-            let laptopIPAddress = document.getElementById("ip-address").value;
+            let laptopIPAddress = document.getElementById("ip-address").value.trim();
             let url = `http://${laptopIPAddress}:8000/take-screen-shot`;
 
             fetch(url, {
@@ -463,7 +482,7 @@
                     "Content-Type": "application/json",
                     "X-CSRFToken": getCookie("csrftoken")
                 },
-                body: JSON.stringify({ ipAddress: document.getElementById("ip-address").value })
+                body: JSON.stringify({ ipAddress: laptopIPAddress })
             })
                 .then(res => res.json())
                 .then(data => {
@@ -473,6 +492,7 @@
                         a.href = data["image_data"];
                         a.download = "screen_shot_server.png";
                         a.parentNode.hidden = false;
+                        outputEle.innerText = "";
                     }
                     else {
                         outputEle.innerText = data.output;
@@ -480,7 +500,7 @@
                     }
                 }).catch(err => {
                     console.error("Fetch failed:", err);
-                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.innerText = err.message + "\n/Invalid IP Address\n/server not started";
                     outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
                 });
         }
