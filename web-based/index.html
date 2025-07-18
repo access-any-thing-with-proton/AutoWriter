@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 5px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+        }
+
+        #heading {
+            background-image: linear-gradient(355deg, red, orange, blue, yellow, gray);
+            background-clip: text;
+            color: transparent;
+            display: block;
+            margin: 0 auto;
+            border-right: 1px solid white;
+            animation: writer 5s steps(16) infinite alternate forwards, blink 1s linear infinite;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        @keyframes writer {
+            0% {
+                width: 0px;
+            }
+
+            100% {
+                width: 20rem;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .note {
+            color: red;
+            text-align: center;
+        }
+
+        #output {
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        form {
+            display: block;
+        }
+
+        .main-items {
+            display: grid;
+            grid-template-columns: 20% 75%;
+            column-gap: 5%;
+            height: 70vh;
+        }
+
+        .buttons {
+            padding-top: 10px;
+            display: grid;
+            grid-template-columns: 100%;
+            justify-items: center;
+            row-gap: 10px;
+            background-color: black;
+            z-index: 0;
+        }
+
+        .buttons label {
+            background-color: gray;
+            padding: 5px;
+        }
+
+        .buttons * {
+            width: 55%;
+            align-content: center;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .buttons input {
+            border: 1px solid black;
+        }
+
+        .buttons button,
+        input[type="range"] {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        button {
+            transition: all 2s ease-in-out;
+            background-image: linear-gradient(145deg, violet, tomato);
+            position: relative;
+        }
+
+        button:hover {
+            background-image: linear-gradient(145deg, tomato, violet);
+            border-radius: 15px;
+        }
+
+        /* @property --angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        } */
+
+        button::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+
+            top: 0%;
+            left: 0%;
+            transform: scaleX(1.02) scaleY(1.1);
+            width: 100%;
+            height: 100%;
+            background-image: conic-gradient(from var(--angle), blue, transparent, yellow, green, hotpink, transparent);
+            animation: rotateBackground 5s infinite ease-in-out;
+        }
+
+        @keyframes rotateBackground {
+            0% {
+                --angle: 0deg
+            }
+
+            100% {
+                --angle: 360deg;
+            }
+        }
+
+        #range-value {
+            color: white;
+        }
+
+        .text-area-div {
+            border: 1px solid black;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            font-size: 1.2rem;
+        }
+
+        .text-area-div textarea:focus {
+            outline-offset: 2px;
+            outline-width: 2px;
+            outline-style: dashed;
+            outline-color: blueviolet;
+        }
+
+        .other-fields {
+            display: grid;
+            grid-template-columns: 48% 50%;
+            height: 50vh;
+            column-gap: 2%;
+        }
+
+        .other-fields button {
+            width: max-content;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            align-self: center;
+            font-size: 1rem;
+            margin: 5px 0px;
+        }
+
+        .clipboard-div {
+            display: flex;
+            flex-direction: column;
+            row-gap: 3px;
+            border: 1px solid black;
+        }
+
+        .screen-shot-div {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid black;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .screen-shot-div a {
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+        }
+
+        .screen-shot-div .image-div {
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            margin-top: 5px;
+            height: 50px;
+            background-color: wheat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media screen and (max-width:700px) {
+            @keyframes writer {
+                0% {
+                    width: 0px;
+                }
+
+                100% {
+                    width: 100%;
+                }
+            }
+
+            .main-items {
+                grid-template-columns: 100%;
+                grid-template-rows: max-content;
+                row-gap: 5px;
+            }
+
+            .main-items .buttons {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .other-fields {
+                grid-template-columns: 100%;
+                height: 75vh;
+                row-gap: 15px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <h1><span id="heading">Auto Writer...</span></h1>
+    <br>
+    <hr>
+    <div class="note">You'r server and HTML file should connect to same Network.</div>
+    <br>
+    <p id="output"></p>
+    <form action="" method="post">
+        <div class="main-items">
+            <div class="buttons">
+                <label for="ip-address">Enter IPv4 address</label>
+                <input type="text" placeholder="Enter System IPv4 Address" id="ip-address" value="192.168.1.33"
+                    required>
+
+                <div></div>
+                <button id="send-data">send data</button>
+
+                <div></div>
+                <button id="start">start</button>
+
+                <div></div>
+                <button id="stop">stop</button>
+
+                <label for="time-delay">Change delay</label>
+                <input type="range" id="time-delay" min="0.2" max="2" value="0.5" step="0.1">
+
+                <div id="range-value">0.5 seconds</div>
+            </div>
+            <div class="text-area-div">
+                <textarea name="message" id="message" placeholder="Type your message..."></textarea>
+            </div>
+        </div>
+        <hr>
+        <br>
+        <div class="other-fields">
+            <div class="clipboard-div">
+                <button id="clipboard" type="button">Get latest copied Text</button>
+                <textarea name="clipboard-data" id="clipboard-data"
+                    placeholder="Here is your clipboard data"></textarea>
+            </div>
+            <div class="screen-shot-div">
+                <div class="links">
+                    <button hidden><a href="" id="anchor">Download Image</a></button>
+                    <button id="take-image" type="button">Take screen shot</button>
+                </div>
+                <div class="image-div">
+                    <img src="" alt="" id="image" style="width: 100%; height: 100%;">
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <footer>
+        <a href="https://github.com/access-any-thing-with-proton/AutoWriter" target="_blank">GitHub Url</a>
+    </footer>
+
+    <script>
+        let isStop = false;
+        let timeDelay = 0.5;
+
+        document.getElementById("send-data").addEventListener("click", send);
+        document.getElementById("start").addEventListener("click", start);
+        document.getElementById("stop").addEventListener("click", stop);
+        document.getElementById("clipboard").addEventListener("click", getClipBoard);
+        document.getElementById("time-delay").addEventListener("change", change);
+        document.getElementById("take-image").addEventListener("click", takeImage);
+
+        outputEle = document.getElementById("output");
+
+        function start(event) {
+            event.preventDefault()
+            isStop = false;
+            additionalOptions();
+        }
+        function stop(event) {
+            event.preventDefault()
+            isStop = true;
+            additionalOptions();
+        }
+
+        function change(event) {
+            event.preventDefault();
+            timeDelay = document.getElementById("time-delay").value;
+            document.getElementById("range-value").innerText = `${Number(timeDelay).toFixed(1)} seconds`;
+            additionalOptions();
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+            return cookieValue;
+        }
+
+        function send(event) {
+            event.preventDefault();
+            const msg = document.getElementById("message").value;
+            let laptopIPAddress = document.getElementById("ip-address").value;
+            let url = `http://${laptopIPAddress}:8000/`;
+            try {
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify({ message: msg, ipAddress: document.getElementById("ip-address").value })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        let text = data.output;
+                        outputEle.innerText = text;
+                        if (!text.includes("Error")) {
+                            outputEle.style.backgroundColor = "rgba(0,255,0,0.6)";
+                            setTimeout(() => {
+                                outputEle.innerText = "";
+                            }, 3000);
+                        }
+                        else {
+                            outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                        }
+                    }).catch(err => {
+                        console.error("Fetch failed:", err);
+                        outputEle.innerText = err.message + "/Invalid IP Address";
+                        outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                    });
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+
+        function additionalOptions() {
+            let laptopIPAddress = document.getElementById("ip-address").value;
+            let url = `http://${laptopIPAddress}:8000/options`;
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ stop: isStop, delay: timeDelay, ipAddress: document.getElementById("ip-address").value })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    let text = data.output;
+                    outputEle.innerText = text;
+                    if (!text.includes("Error")) {
+                        outputEle.style.backgroundColor = "rgba(0,255,0,0.6)";
+                        setTimeout(() => {
+                            outputEle.innerText = "";
+                        }, 3000);
+                    }
+                    else {
+                        outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                    }
+                }).catch(err => {
+                    console.error("Fetch failed:", err);
+                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                });
+        }
+
+        function getClipBoard() {
+            let laptopIPAddress = document.getElementById("ip-address").value;
+            let url = `http://${laptopIPAddress}:8000/get-clip-board`;
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ ipAddress: laptopIPAddress })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    let text = data["copied_text"];
+                    document.getElementById("clipboard-data").innerText = text;
+                    if (text.includes("Error")) {
+                        outputEle.innerText = text;
+                        outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                    }
+                }).catch(err => {
+                    console.error("Fetch failed:", err);
+                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                });
+
+        }
+
+        function takeImage() {
+            let laptopIPAddress = document.getElementById("ip-address").value;
+            let url = `http://${laptopIPAddress}:8000/take-screen-shot`;
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ ipAddress: document.getElementById("ip-address").value })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.output.includes("Error")) {
+                        document.getElementById("image").src = data["image_data"];
+                        const a = document.getElementById("anchor");
+                        a.href = data["image_data"];
+                        a.download = "screen_shot_server.png";
+                        a.parentNode.hidden = false;
+                    }
+                    else {
+                        outputEle.innerText = data.output;
+                        outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                    }
+                }).catch(err => {
+                    console.error("Fetch failed:", err);
+                    outputEle.innerText = err.message + "/Invalid IP Address";
+                    outputEle.style.backgroundColor = "rgba(255,0,0,0.6)";
+                });
+        }
+    </script>
+</body>
+
+</html>
