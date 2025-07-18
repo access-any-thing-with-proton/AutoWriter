@@ -3,4 +3,4 @@ AND USING THE FRONT END PART TO RETRIVE DATA
 
 You need to downlaod both html and exe file 
 and both should connect to same network
-Link for exe: https://uploda.sh/4gjeChdoWYZe
+Link for exe: https://uploda.sh/eKOKyaWL06BG
