@@ -324,8 +324,8 @@
         <div class="other-fields">
             <div class="clipboard-div">
                 <button id="clipboard" type="button">Get latest copied Text</button>
-                <textarea name="clipboard-data" id="clipboard-data"
-                    placeholder="Here is your clipboard data"></textarea>
+                <textarea name="clipboard-data" id="clipboard-data" placeholder="Here is your clipboard data"
+                    readonly></textarea>
             </div>
             <div class="screen-shot-div">
                 <div class="links">
@@ -488,6 +488,7 @@
                     }
                     else {
                         outputEle.innerText = "";
+                        console.log(text);
                         document.getElementById("clipboard-data").innerText = text;
                     }
                 }).catch(err => {
