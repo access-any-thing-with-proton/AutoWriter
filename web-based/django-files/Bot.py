@@ -39,7 +39,7 @@ def run_django():
 threading.Thread(target=run_django, daemon=True).start()
 
 # Launch GUI window (blocks until user closes it)
-webview.create_window("Auto Writer", "http://127.0.0.1:8000/")
+webview.create_window("Auto Writer", "http://127.0.0.1:8000/", resizable=False, zoomable=True)
 webview.start()
 
 # After GUI closes, stop Django server
