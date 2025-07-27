@@ -20,10 +20,14 @@ import re
 
 @staticmethod
 def check_ip_address(income_ip_address):
+    org_ip_address = get_ip_address()
+    return income_ip_address == org_ip_address
+
+def get_ip_address():
     name = socket.gethostname()
     org_ip_address = socket.gethostbyname(name)
 
-    return income_ip_address == org_ip_address
+    return org_ip_address
 
 @csrf_exempt
 def incoming_message(request:WSGIRequest):
@@ -37,6 +41,12 @@ def incoming_message(request:WSGIRequest):
             message = data.get("message", "")
             return_message = ""
             try:
+                if re.search("<html.*>",message,flags=re.M).string:
+                    " remove the comments in the html text "
+                    pattern = r"<!--[^-->]+-->"
+                    removed_comments = re.sub(pattern=pattern, repl="", string=message, flags=re.M) # removes the comments in html
+                    message = "<!--\n" + removed_comments
+
                 if len(CodeDB.objects.all()) == 0:
                     CodeDB(text= "l1\n" + message).save()
                 else:
@@ -53,8 +63,28 @@ def incoming_message(request:WSGIRequest):
         
         except Exception as e:
             return JsonResponse(data={"output": f"Error: {str(e)}"}, status=400)
+        
+    
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <h2 style=text-align:center>Server Started...</h2>
+        <p>You can send messages now.</p>
+        <p>After closing GUI close the console also</p>
+        <p>System IP Address: "<span style=color:green;>{get_ip_address()}</span>" </p>
+        <strong>Enter the Above IP Address in the HTML Page.</strong>
+    </body>
+    </html>
 
-    return HttpResponse(content="Server Started...<br>You can send messages Now.<br>After closing GUI close the console also")
+    """
+
+    return HttpResponse(content=html_content)
 
 @csrf_exempt
 def additional_options(request:WSGIRequest):
@@ -95,42 +125,52 @@ def bot_writer(brackets_option:str):
     text = CodeDB.objects.get(id=1).text
 
     lines = re.split(r'\r\n|\r|\n', text)
-    words = [line for line in lines if line.strip()]
+    lines = [line for line in lines if line.strip()]
 
     keyboard.press_and_release('enter')
 
     while True:
 
-        if index == len(words):
+        if index == len(lines):
             break
-        
-        word = words[index]
+
+        if lines[1].startswith("<!--"):
+            keyboard.write(lines[1], delay=0.3)
+
+            keyboard.press_and_release("enter")
+            keyboard.press_and_release("up")
+
+            time.sleep(1)
+            lines[1] = "" # makes the empty string of the index 1
+
+        line:str = lines[index]
+
         letter_index = 0
         
         while True:
-            if letter_index == len(word):
+            if letter_index == len(line):
                 break
             
             if index == 0:
                 letter_index +=1
-                # skipping the default line for prevent of not typing first char
+                # skipping the default line from preventing of not typing first char
                 continue
 
             elif CodeDB.objects.get(id=1).is_stop:
                 continue
             
             elif CodeDB.objects.get(id=1).is_new_data:
-                index = len(words) - 1
+                index = len(lines) - 1
                 break
 
-            if word[letter_index] in ["{","[","("] and brackets_option == "1":
+            if line[letter_index] in ["{","[","("] and brackets_option == "1":
                 # 1 means remove the closing brackets
-                keyboard.write(text=word[letter_index], delay=CodeDB.objects.get(id=1).time_delay)
+                keyboard.write(text=line[letter_index], delay=CodeDB.objects.get(id=1).time_delay)
                 keyboard.press_and_release("right")
                 keyboard.press_and_release("backspace")
                 time.sleep(0.2)
             else:
-                keyboard.write(text=word[letter_index], delay=CodeDB.objects.get(id=1).time_delay)
+                keyboard.write(text=line[letter_index], delay=CodeDB.objects.get(id=1).time_delay)
 
             letter_index +=1
         
