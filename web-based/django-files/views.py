@@ -41,7 +41,7 @@ def incoming_message(request:WSGIRequest):
             message = data.get("message", "")
             return_message = ""
             try:
-                if re.search("<html.*>",message,flags=re.M).string:
+                if re.search("<html.*>",message,flags=re.M):
                     " remove the comments in the html text "
                     pattern = r"<!--[^-->]+-->"
                     removed_comments = re.sub(pattern=pattern, repl="", string=message, flags=re.M) # removes the comments in html
@@ -57,7 +57,7 @@ def incoming_message(request:WSGIRequest):
                     obj.save()
                     
                 return_message = "Data Added Successfully.."
-            except:
+            except Exception as e:
                 return_message = f"Error: {e}"
             return JsonResponse(data={"output": return_message})
         
@@ -77,8 +77,10 @@ def incoming_message(request:WSGIRequest):
         <h2 style=text-align:center>Server Started...</h2>
         <p>You can send messages now.</p>
         <p>After closing GUI close the console also</p>
-        <p>System IP Address: "<span style=color:green;>{get_ip_address()}</span>" </p>
-        <strong>Enter the Above IP Address in the HTML Page.</strong>
+        <p>System IP Address: <span style=color:green;font-size:1.5rem>{get_ip_address()}</span> </p>
+        <strong>Enter the Above IP Address in the HTML Page.</strong> <br>
+        <a href="https://github.com/access-any-thing-with-proton/AutoWriter/tree/main/web-based" target="_blank" 
+        style="position:fixed;top:95%; left:50%;transform:translate(-50%,-50%);">GitHub Url</a>
     </body>
     </html>
 
